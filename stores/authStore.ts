@@ -13,6 +13,7 @@ export const useAuthStore = defineStore('auth', {
     permissions: [] as string[],
     name: '', // Nuevo campo
     email: '', // Nuevo campo
+    userId: null as number | null,
   }),
 
   getters: {
@@ -99,7 +100,8 @@ export const useAuthStore = defineStore('auth', {
      */
     async fetchUserData() {
       try {
-        const { name, email, roles, permissions } = await fetchUserData();
+        const { id, name, email, roles, permissions } = await fetchUserData();
+        this.userId = id; // Asegúrate que el backend devuelva el ID
         this.name = name;
         this.email = email;
         this.roles = roles;
