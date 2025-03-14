@@ -25,6 +25,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
 
     // Si el usuario está autenticado, se carga la información de usuario en segundo plano
     if (isAuthenticated.value) {
+      //fijarse en esto que cuando esta autenticado se carga la informacion del usuario
       fetchUserDataIfNeeded();
     }
 

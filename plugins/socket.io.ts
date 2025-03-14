@@ -1,11 +1,22 @@
-import { defineNuxtPlugin } from '#app'
+import { defineNuxtPlugin, useCookie } from '#app'
 import { io, Socket } from 'socket.io-client'
 
-export default defineNuxtPlugin((nuxtApp) => {
-  // Forzamos el uso exclusivo de WebSocket para evitar polling
+export default defineNuxtPlugin(() => {
+  const accessTokenCookie = useCookie('access_token')
+  const token = accessTokenCookie.value
+  console.log('Token obtenido del cliente:', token)
+
   const socket: Socket = io('http://localhost:4000', {
     path: '/ws',
-    transports: ['websocket']
+    transports: ['websocket'],
+    auth: {
+      token: token || ''
+    }
   })
-  nuxtApp.provide('socket', socket)
+
+  return {
+    provide: {
+      socket
+    }
+  }
 })
