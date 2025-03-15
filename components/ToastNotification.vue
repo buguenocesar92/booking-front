@@ -1,6 +1,6 @@
 <template>
     <transition name="fade">
-      <div v-if="visible" class="fixed bottom-4 right-4 w-full max-w-xs p-4 text-gray-900 bg-white rounded-lg shadow-sm dark:bg-gray-800 dark:text-gray-300" role="alert">
+      <div v-if="visible" class="w-full max-w-xs p-4 text-gray-900 bg-white rounded-lg shadow-sm dark:bg-gray-800 dark:text-gray-300" role="alert">
         <div class="flex items-center mb-3">
           <span class="text-sm font-semibold text-gray-900 dark:text-white">{{ title }}</span>
           <button type="button" @click="close" class="ms-auto -mx-1.5 -my-1.5 bg-white flex items-center justify-center shrink-0 text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700" aria-label="Close">
@@ -29,7 +29,7 @@
   
   const props = defineProps({
     title: { type: String, default: 'Nueva Reserva' },
-    image: { type: String, default: '/docs/images/people/profile-picture-3.jpg' },
+    image: { type: String, default: 'https://via.placeholder.com/150' },
     reservationName: { type: String, default: '' },
     reservationMessage: { type: String, default: '' },
     reservationTime: { type: String, default: '' }
@@ -45,7 +45,6 @@
   }
   
   onMounted(() => {
-    // Cierra el toast automáticamente después de 5 segundos
     setTimeout(() => {
       close();
     }, 5000);
