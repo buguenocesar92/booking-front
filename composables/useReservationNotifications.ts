@@ -19,6 +19,10 @@ export function useReservationNotifications() {
   // Función para unirse al canal de reservaciones usando el ID del usuario
   const joinChannel = (userId: number) => {
     const channel = `laravel_database_private-reservations.${userId}`;
+    // Solo unirse si no se ha unido ya a ese canal
+    if (joinedChannel.value === channel) {
+      return;
+    }
     joinedChannel.value = channel;
     $socket.emit("join-private-channel", { channel });
     console.log("Intentando unirse al canal:", channel);
@@ -29,12 +33,15 @@ export function useReservationNotifications() {
     if (authStore.userId) {
       joinChannel(authStore.userId);
     }
-    // Observa cambios en el ID del usuario en caso de que se actualice
+    // Observa cambios en el ID del usuario y valida que se una solo si el canal cambia
     watch(
       () => authStore.userId,
       (newId) => {
         if (newId) {
-          joinChannel(newId);
+          const expectedChannel = `laravel_database_private-reservations.${newId}`;
+          if (joinedChannel.value !== expectedChannel) {
+            joinChannel(newId);
+          }
         }
       }
     );
@@ -47,7 +54,7 @@ export function useReservationNotifications() {
     $socket.on("private-message", (data: any) => {
       console.log("Notificación de reserva recibida:", data);
       let reservation;
-      // Verificar si viene en data.data.reservation o data.reservation
+      // Validar si la reserva viene en data.data.reservation o data.reservation
       if (data && data.data && data.data.reservation) {
         reservation = data.data.reservation;
       } else if (data && data.reservation) {

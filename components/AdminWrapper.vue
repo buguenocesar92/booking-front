@@ -7,12 +7,15 @@
         <slot />
       </div>
       <FooterAdmin />
+      <!-- Componente global de notificaciones en tiempo real -->
+      <RealTimeNotifications />
     </div>
-  </div>
+  </div>  
 </template>
 
 <script setup lang="ts">
 import Sidebar from '@/components/Sidebar/Sidebar.vue';
 import AdminNavbar from '@/components/Navbars/AdminNavbar.vue';
 import FooterAdmin from "@/components/Footers/FooterAdmin.vue";
+import RealTimeNotifications from '@/components/RealTimeNotifications.vue';
 </script>
