@@ -1,8 +1,8 @@
 // src/stores/authStore.ts
-import { defineStore } from 'pinia';
-import { useCookie } from '#app';
-import { loginUser, logoutUser, fetchUserData, registerUser } from '@/services/AuthService';
-import type { AuthPayload, RegisterUser } from '@/types/AuthTypes';
+import { defineStore } from 'pinia'
+import { useCookie } from '#app'
+import { loginUser, logoutUser, fetchUserData, registerUser } from '@/services/AuthService'
+import type { AuthPayload, RegisterUser } from '@/types/AuthTypes'
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
@@ -11,8 +11,8 @@ export const useAuthStore = defineStore('auth', {
     refreshToken: '',
     roles: [] as string[],
     permissions: [] as string[],
-    name: '', // Nuevo campo
-    email: '', // Nuevo campo
+    name: '',
+    email: '',
     userId: null as number | null,
   }),
 
@@ -30,44 +30,47 @@ export const useAuthStore = defineStore('auth', {
         maxAge: 60 * 60 * 24 * 7, // 7 días
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'lax'
-      });
+      })
       const refreshTokenCookie = useCookie('refresh_token', {
         maxAge: 60 * 60 * 24 * 7,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'lax'
-      });
-      this.accessToken = accessTokenCookie.value || '';
-      this.refreshToken = refreshTokenCookie.value || '';
-      this.isAuthenticated = Boolean(this.accessToken && this.refreshToken);
+      })
+      this.accessToken = accessTokenCookie.value || ''
+      this.refreshToken = refreshTokenCookie.value || ''
+      this.isAuthenticated = Boolean(this.accessToken && this.refreshToken)
     },
 
     /**
-     * Inicia sesión, guarda los tokens en cookies y obtiene los datos del usuario.
+     * Inicia sesión, guarda los tokens en cookies y actualiza el estado del usuario.
      */
     async login(payload: AuthPayload) {
       try {
-        const { access_token, refresh_token } = await loginUser(payload);
+        const { access_token, refresh_token } = await loginUser(payload)
         const accessTokenCookie = useCookie('access_token', {
           maxAge: 60 * 60 * 24 * 7,
           secure: process.env.NODE_ENV === 'production',
           sameSite: 'lax'
-        });
+        })
         const refreshTokenCookie = useCookie('refresh_token', {
           maxAge: 60 * 60 * 24 * 7,
           secure: process.env.NODE_ENV === 'production',
           sameSite: 'lax'
-        });
-        accessTokenCookie.value = access_token;
-        refreshTokenCookie.value = refresh_token;
+        })
+        // Guarda los tokens en las cookies
+        accessTokenCookie.value = access_token
+        refreshTokenCookie.value = refresh_token
 
-        this.accessToken = access_token;
-        this.refreshToken = refresh_token;
-        this.isAuthenticated = true;
+        // Actualiza el estado del store
+        this.accessToken = access_token
+        this.refreshToken = refresh_token
+        this.isAuthenticated = true
 
-        await this.fetchUserData();
+        // Obtiene la información adicional del usuario
+        await this.fetchUserData()
       } catch (error) {
-        console.error('Login failed:', error);
-        throw error;
+        console.error('Login failed:', error)
+        throw error
       }
     },
 
@@ -76,22 +79,23 @@ export const useAuthStore = defineStore('auth', {
      */
     async logout() {
       try {
-        await logoutUser();
+        await logoutUser()
       } catch (error) {
-        console.error('Logout failed:', error);
+        console.error('Logout failed:', error)
       } finally {
-        const accessTokenCookie = useCookie('access_token');
-        const refreshTokenCookie = useCookie('refresh_token');
-        accessTokenCookie.value = null;
-        refreshTokenCookie.value = null;
+        const accessTokenCookie = useCookie('access_token')
+        const refreshTokenCookie = useCookie('refresh_token')
+        accessTokenCookie.value = null
+        refreshTokenCookie.value = null
 
-        this.accessToken = '';
-        this.refreshToken = '';
-        this.roles = [];
-        this.permissions = [];
-        this.name = '';
-        this.email = '';
-        this.isAuthenticated = false;
+        this.accessToken = ''
+        this.refreshToken = ''
+        this.roles = []
+        this.permissions = []
+        this.name = ''
+        this.email = ''
+        this.isAuthenticated = false
+        this.userId = null
       }
     },
 
@@ -100,45 +104,45 @@ export const useAuthStore = defineStore('auth', {
      */
     async fetchUserData() {
       try {
-        const { id, name, email, roles, permissions } = await fetchUserData();
-        this.userId = id; // Asegúrate que el backend devuelva el ID
-        this.name = name;
-        this.email = email;
-        this.roles = roles;
-        this.permissions = permissions;
+        const { id, name, email, roles, permissions } = await fetchUserData()
+        this.userId = id
+        this.name = name
+        this.email = email
+        this.roles = roles
+        this.permissions = permissions
       } catch (error) {
-        console.error('Error fetching user data:', error);
+        console.error('Error fetching user data:', error)
       }
     },
 
     /**
-     * Registra un nuevo usuario, guarda los tokens en cookies y obtiene los datos del usuario.
+     * Registra un nuevo usuario, guarda los tokens en cookies y actualiza el estado del usuario.
      */
     async register(payload: RegisterUser) {
       try {
-        const { access_token, refresh_token } = await registerUser(payload);
+        const { access_token, refresh_token } = await registerUser(payload)
         const accessTokenCookie = useCookie('access_token', {
           maxAge: 60 * 60 * 24 * 7,
           secure: process.env.NODE_ENV === 'production',
           sameSite: 'lax'
-        });
+        })
         const refreshTokenCookie = useCookie('refresh_token', {
           maxAge: 60 * 60 * 24 * 7,
           secure: process.env.NODE_ENV === 'production',
           sameSite: 'lax'
-        });
-        accessTokenCookie.value = access_token;
-        refreshTokenCookie.value = refresh_token;
+        })
+        accessTokenCookie.value = access_token
+        refreshTokenCookie.value = refresh_token
 
-        this.accessToken = access_token;
-        this.refreshToken = refresh_token;
-        this.isAuthenticated = true;
+        this.accessToken = access_token
+        this.refreshToken = refresh_token
+        this.isAuthenticated = true
 
-        await this.fetchUserData();
+        await this.fetchUserData()
       } catch (error) {
-        console.error('Registration failed:', error);
-        throw error;
+        console.error('Registration failed:', error)
+        throw error
       }
     },
   },
-});
+})
