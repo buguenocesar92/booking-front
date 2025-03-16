@@ -8,7 +8,7 @@ export default defineNuxtConfig({
   ],
   runtimeConfig: {
     public: {
-      apiURL: process.env.API_URL || 'https://booking-api-main-mg1a5i.laravel.cloud'
+      apiURL: process.env.API_URL || 'https://booking-api-main-mg1a5i.laravel.cloud/api'
     }
   },
   css: [
