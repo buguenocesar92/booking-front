@@ -52,7 +52,7 @@ interface Professional {
 
 const { form, isLoading, errors, errorMessage, handleLogin } = useLoginForm();
 const config = useRuntimeConfig();
-const { data: professionals, pending, error } = await useFetch<Professional[]>(`${config.public.apiURL}/api/professionals`, {
+const { data: professionals, pending, error } = await useFetch<Professional[]>(`${config.public.apiURL}/professionals`, {
   // Puedes agregar opciones como headers si fuera necesario
 });
 </script>

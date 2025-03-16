@@ -20,7 +20,7 @@ const route = useRoute();
 
 // Utilizamos useFetch para obtener el detalle del profesional
 const { data: professional, pending, error } = await useFetch<Professional>(
-  `${config.public.apiURL}/api/professionals/${route.params.id}`
+  `${config.public.apiURL}/professionals/${route.params.id}`
 );
 </script>
 

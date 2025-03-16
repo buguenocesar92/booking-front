@@ -32,7 +32,7 @@ const fetchAvailableSlots = async () => {
     return
   }
   try {
-    const url = `${config.public.apiURL}/api/reservations/professionals/${professionalId}/available-slots?date=${selectedDate.value}`
+    const url = `${config.public.apiURL}/reservations/professionals/${professionalId}/available-slots?date=${selectedDate.value}`
     const slots = await $fetch<string[]>(url)
     availableTimeSlots.value = slots
   } catch (err: any) {
@@ -62,7 +62,7 @@ const reservar = async () => {
   }
   
   // Enviar la reserva a la API usando useFetch
-  const { error } = await useFetch(`${config.public.apiURL}/api/reservations`, {
+  const { error } = await useFetch(`${config.public.apiURL}/reservations`, {
     method: 'POST',
     body: payload
   })
