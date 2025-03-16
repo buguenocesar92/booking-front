@@ -4,7 +4,7 @@ import type { AxiosInstance } from 'axios';
 import type { InternalAxiosRequestConfig } from 'axios';
 import { useCookie } from '#app';
 
-const baseURL = import.meta.env.VITE_API_BASE_URL || 'https://api.cbm3lla.me';
+const baseURL = import.meta.env.VITE_API_BASE_URL || 'https://booking-api-main-mg1a5i.laravel.cloud';
 console.log('Base URL:', baseURL);
 
 const axiosInstance: AxiosInstance = axios.create({
