@@ -6,9 +6,9 @@ import { useAuthStore } from '~/stores/authStore'
 export default defineNuxtPlugin(() => {
   const runtimeConfig = useRuntimeConfig()
   const authStore = useAuthStore()
-  
-  // Construimos la URL con las variables de entorno
-  const socketUrl = `${runtimeConfig.public.SOCKET_SERVER}:${runtimeConfig.public.SOCKET_SERVER_PORT}`
+
+  // Usamos la URL definida en el .env: "https://ws.cbm3lla.me"
+  const socketUrl = runtimeConfig.public.SOCKET_SERVER
 
   const socket: Socket = io(socketUrl, {
     path: '/ws',
@@ -18,7 +18,7 @@ export default defineNuxtPlugin(() => {
     }
   })
 
-  // Observa cambios en el token del store
+  // Observa cambios en el token del store para reconectar el socket
   watch(
     () => authStore.accessToken,
     (newToken) => {
@@ -29,8 +29,6 @@ export default defineNuxtPlugin(() => {
   )
 
   return {
-    provide: {
-      socket
-    }
+    provide: { socket }
   }
 })
