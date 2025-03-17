@@ -4,8 +4,13 @@ import { watch } from 'vue'
 import { useAuthStore } from '~/stores/authStore'
 
 export default defineNuxtPlugin(() => {
+  const runtimeConfig = useRuntimeConfig()
   const authStore = useAuthStore()
-  const socket: Socket = io('http://localhost:4000', {
+  
+  // Construimos la URL con las variables de entorno
+  const socketUrl = `${runtimeConfig.public.SOCKET_SERVER}:${runtimeConfig.public.SOCKET_SERVER_PORT}`
+
+  const socket: Socket = io(socketUrl, {
     path: '/ws',
     transports: ['websocket'],
     auth: {
@@ -16,8 +21,7 @@ export default defineNuxtPlugin(() => {
   // Observa cambios en el token del store
   watch(
     () => authStore.accessToken,
-    (newToken, oldToken) => {
-      // Forzamos el tipo para acceder a token
+    (newToken) => {
       (socket.auth as any).token = newToken || ''
       socket.disconnect()
       socket.connect()
