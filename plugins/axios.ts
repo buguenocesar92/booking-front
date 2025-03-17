@@ -6,7 +6,7 @@ import cookie from 'cookie';
 
 export default defineNuxtPlugin((nuxtApp) => {
   const config = useRuntimeConfig();
-  const baseURL = config.public.apiURL || 'http://localhost:8000/api';
+  const baseURL = config.public.API_URL
 
   const axiosInstance: AxiosInstance = axios.create({
     baseURL,
