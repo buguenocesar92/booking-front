@@ -6,6 +6,7 @@ import esLocale from '@fullcalendar/core/locales/es'
 import { fetchProfessionalReservations } from '@/services/reservationService'
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
+import type { ReservationPayload } from '@/types/ReservationTypes'  // Importa la interfaz
 
 export function useReservationManager() {
   const events = ref<EventInput[]>([])
@@ -31,7 +32,7 @@ export function useReservationManager() {
     eventClick: (info) => {
       selectedReservation.value = {
         title: info.event.title,
-        start: info.event.start ? format(new Date(info.event.start), "PPPP p", { locale: es }) : '', // Formato en español
+        start: info.event.start ? format(new Date(info.event.start), "PPPP p", { locale: es }) : '',
         duration: info.event.extendedProps?.duration || 60,
         email: info.event.extendedProps?.email || '',
         message: info.event.extendedProps?.message || '',
@@ -42,8 +43,8 @@ export function useReservationManager() {
 
   const loadReservations = async () => {
     try {
-      const reservations = await fetchProfessionalReservations()
-      events.value = reservations.map((res: any) => ({
+      const reservations: ReservationPayload[] = await fetchProfessionalReservations()
+      events.value = reservations.map((res: ReservationPayload) => ({
         id: String(res.id),
         title: res.name,
         start: new Date(`${res.date} ${res.time}`).toISOString(),
