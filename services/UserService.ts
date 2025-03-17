@@ -1,5 +1,5 @@
 // src/services/UserService.ts
-import axios from '@/axiosConfig';
+import { useNuxtApp } from '#app';
 import type { RegisterUser, User } from '@/types/UserTypes';
 
 /**
@@ -7,7 +7,8 @@ import type { RegisterUser, User } from '@/types/UserTypes';
  * Retorna un objeto con "frontend_url" (según tu backend).
  */
 export async function registerUser(payload: RegisterUser): Promise<{ frontend_url: string }> {
-  const response = await axios.post('/auth/register', payload);
+  const { $axios } = useNuxtApp();
+  const response = await $axios.post('/auth/register', payload);
   return response.data;
 }
 
@@ -15,7 +16,8 @@ export async function registerUser(payload: RegisterUser): Promise<{ frontend_ur
  * (Creación desde el panel admin) Crea un usuario enviando 'name', 'email' y 'password'.
  */
 export async function createUser(payload: RegisterUser): Promise<User> {
-  const response = await axios.post('/users', payload);
+  const { $axios } = useNuxtApp();
+  const response = await $axios.post('/users', payload);
   return response.data;
 }
 
@@ -24,7 +26,8 @@ export async function createUser(payload: RegisterUser): Promise<User> {
  * se puede enviar como undefined o simplemente omitirlo en el payload.
  */
 export async function updateUser(id: number, payload: Partial<User>): Promise<User> {
-  const response = await axios.put(`/users/${id}`, payload);
+  const { $axios } = useNuxtApp();
+  const response = await $axios.put(`/users/${id}`, payload);
   return response.data;
 }
 
@@ -32,21 +35,26 @@ export async function updateUser(id: number, payload: Partial<User>): Promise<Us
  * Obtiene la lista de usuarios desde el backend.
  */
 export async function fetchAllUsers(): Promise<User[]> {
-  const response = await axios.get('/users');
+  const { $axios } = useNuxtApp();
+  const response = await $axios.get('/users');
   return response.data;
 }
 
+/**
+ * Obtiene un usuario por ID.
+ */
 export async function fetchUserById(id: number): Promise<User> {
-  const response = await axios.get(`/users/${id}`);
+  const { $axios } = useNuxtApp();
+  const response = await $axios.get(`/users/${id}`);
   return response.data;
 }
-
 
 /**
  * Elimina un usuario.
  */
 export async function deleteUser(id: number): Promise<void> {
-  await axios.delete(`/users/${id}`);
+  const { $axios } = useNuxtApp();
+  await $axios.delete(`/users/${id}`);
 }
 
 /**
@@ -55,13 +63,15 @@ export async function deleteUser(id: number): Promise<void> {
  * @param userIds Array de IDs de usuarios que se van a asociar a ese rol.
  */
 export async function updateRoleUsers(roleId: string, userIds: number[]): Promise<void> {
-  await axios.put(`/roles/${roleId}/users`, { users: userIds });
+  const { $axios } = useNuxtApp();
+  await $axios.put(`/roles/${roleId}/users`, { users: userIds });
 }
 
 /**
  * Obtiene la lista de usuarios junto con sus ubicaciones.
  */
 export async function fetchAllUsersWithLocations(): Promise<User[]> {
-  const response = await axios.get('/users/with-locations');
+  const { $axios } = useNuxtApp();
+  const response = await $axios.get('/users/with-locations');
   return response.data;
 }

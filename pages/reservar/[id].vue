@@ -1,9 +1,11 @@
 <script setup lang="ts">
+import { useNuxtApp } from '#app';
 import Navbar from "@/components/Navbars/AuthNavbar.vue";
 import FooterComponent from "@/components/Footers/Footer.vue";
 
 import { ref, watch } from 'vue'
-import { useRoute, useRuntimeConfig } from '#app'
+import { useRoute } from '#app'
+const { $axios } = useNuxtApp();
 
 const route = useRoute()
 // Obtenemos la id del profesional de la URL
@@ -14,27 +16,24 @@ const email = ref('')
 const selectedDate = ref('')
 const message = ref('')
 const availableTimeSlots = ref<string[]>([])
-
 const selectedTimeSlot = ref('')
 
 // Variable reactiva para el mensaje de error
 const errorMessage = ref('')
 
-const config = useRuntimeConfig()
-
 // Genera la fecha de hoy en formato ISO (YYYY-MM-DD)
 const today = new Date().toISOString().split('T')[0]
 
-// Función para actualizar los horarios disponibles de forma dinámica
+// Función para actualizar los horarios disponibles de forma dinámica usando axios
 const fetchAvailableSlots = async () => {
   if (!selectedDate.value) {
     availableTimeSlots.value = []
     return
   }
   try {
-    const url = `${config.public.apiURL}/reservations/professionals/${professionalId}/available-slots?date=${selectedDate.value}`
-    const slots = await $fetch<string[]>(url)
-    availableTimeSlots.value = slots
+    // La URL es relativa, ya que axios tiene configurado el baseURL
+    const response = await $axios.get(`/reservations/professionals/${professionalId}/available-slots?date=${selectedDate.value}`)
+    availableTimeSlots.value = response.data
   } catch (err: any) {
     console.error('Error fetching available slots:', err)
     availableTimeSlots.value = []
@@ -61,23 +60,18 @@ const reservar = async () => {
     message: message.value
   }
   
-  // Enviar la reserva a la API usando useFetch
-  const { error } = await useFetch(`${config.public.apiURL}/reservations`, {
-    method: 'POST',
-    body: payload
-  })
-
-  if (error.value) {
-    errorMessage.value = error.value.data?.message || 
-                         error.value.message || 
-                         'Error al enviar la reserva.'
-  } else {
+  try {
+    await $axios.post('/reservations', payload)
     errorMessage.value = ''
     alert('Reserva creada exitosamente.')
     // Limpia el campo de horario seleccionado (opcional)
     selectedTimeSlot.value = ''
     // Actualiza los horarios disponibles para reflejar la nueva reserva
     await fetchAvailableSlots()
+  } catch (err: any) {
+    errorMessage.value = err.response?.data?.message ||
+                         err.message ||
+                         'Error al enviar la reserva.'
   }
 }
 </script>

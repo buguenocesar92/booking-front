@@ -1,11 +1,12 @@
-import axios from '@/axiosConfig';
+import { useNuxtApp } from '#app';
 import type { TaskPayload } from '@/types/TaskTypes';
 
 /**
  * Obtiene todas las tareas.
  */
 export async function fetchTasks(): Promise<TaskPayload[]> {
-  const response = await axios.get('/tasks');
+  const { $axios } = useNuxtApp();
+  const response = await $axios.get('/tasks');
   return response.data;
 }
 
@@ -13,7 +14,8 @@ export async function fetchTasks(): Promise<TaskPayload[]> {
  * Obtiene una tarea por ID.
  */
 export async function fetchTask(id: number): Promise<TaskPayload> {
-  const response = await axios.get(`/tasks/${id}`);
+  const { $axios } = useNuxtApp();
+  const response = await $axios.get(`/tasks/${id}`);
   return response.data;
 }
 
@@ -21,7 +23,8 @@ export async function fetchTask(id: number): Promise<TaskPayload> {
  * Crea una nueva tarea.
  */
 export async function createTask(data: TaskPayload): Promise<TaskPayload> {
-  const response = await axios.post('/tasks', data);
+  const { $axios } = useNuxtApp();
+  const response = await $axios.post('/tasks', data);
   return response.data;
 }
 
@@ -29,7 +32,8 @@ export async function createTask(data: TaskPayload): Promise<TaskPayload> {
  * Actualiza una tarea existente.
  */
 export async function updateTask(id: number, data: TaskPayload): Promise<TaskPayload> {
-  const response = await axios.put(`/tasks/${id}`, data);
+  const { $axios } = useNuxtApp();
+  const response = await $axios.put(`/tasks/${id}`, data);
   return response.data;
 }
 
@@ -37,5 +41,6 @@ export async function updateTask(id: number, data: TaskPayload): Promise<TaskPay
  * Elimina una tarea.
  */
 export async function deleteTask(id: number): Promise<void> {
-  await axios.delete(`/tasks/${id}`);
+  const { $axios } = useNuxtApp();
+  await $axios.delete(`/tasks/${id}`);
 }

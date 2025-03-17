@@ -2,7 +2,7 @@
 import Navbar from "@/components/Navbars/AuthNavbar.vue";
 import FooterComponent from "@/components/Footers/Footer.vue";
 import { useRoute } from 'vue-router'
-import { computed } from 'vue'
+const { $axios } = useNuxtApp();
 
 interface Professional {
   id: number;
@@ -12,16 +12,14 @@ interface Professional {
   description?: string;
 }
 
-// Accedemos a la configuración para obtener la URL base de la API
-const config = useRuntimeConfig();
-
 // Obtenemos el parámetro de la ruta
 const route = useRoute();
 
-// Utilizamos useFetch para obtener el detalle del profesional
-const { data: professional, pending, error } = await useFetch<Professional>(
-  `${config.public.apiURL}/professionals/${route.params.id}`
-);
+// Usamos useAsyncData y la instancia de axios para obtener el detalle del profesional
+const { data: professional, pending, error } = await useAsyncData<Professional>('professional-detail', async () => {
+  const { data } = await $axios.get(`/professionals/${route.params.id}`);
+  return data;
+});
 </script>
 
 <template>

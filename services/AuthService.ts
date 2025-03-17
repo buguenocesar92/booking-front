@@ -1,18 +1,27 @@
 // src/services/AuthService.ts
-import axios from '@/axiosConfig';
+import { useNuxtApp } from '#app';
 import type { AuthPayload, LoginResponse } from '@/types/AuthTypes';
 
 export const loginUser = async (payload: AuthPayload): Promise<LoginResponse> => {
-  const response = await axios.post('/auth/login', payload);
+  const { $axios } = useNuxtApp();
+  const response = await $axios.post('/auth/login', payload);
   return response.data;
 };
 
 export const logoutUser = async (): Promise<void> => {
-  await axios.post('/auth/logout');
+  const { $axios } = useNuxtApp();
+  await $axios.post('/auth/logout');
 };
 
-export const fetchUserData = async (): Promise<{ id:number; name: string; email: string; roles: string[]; permissions: string[] }> => {
-  const response = await axios.post('/auth/me');
+export const fetchUserData = async (): Promise<{
+  id: number;
+  name: string;
+  email: string;
+  roles: string[];
+  permissions: string[];
+}> => {
+  const { $axios } = useNuxtApp();
+  const response = await $axios.post('/auth/me');
   return {
     id: response.data.id || 0,
     name: response.data.name || '',
@@ -22,9 +31,8 @@ export const fetchUserData = async (): Promise<{ id:number; name: string; email:
   };
 };
 
-
-// src/services/AuthService.ts (añadir esta función)
 export const registerUser = async (payload: AuthPayload): Promise<LoginResponse> => {
-  const response = await axios.post('/auth/register', payload);
+  const { $axios } = useNuxtApp();
+  const response = await $axios.post('/auth/register', payload);
   return response.data;
 };

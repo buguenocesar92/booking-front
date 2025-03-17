@@ -1,11 +1,12 @@
 // src/composables/useRoleForm.ts
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import axios from '@/axiosConfig';
+import { useNuxtApp } from '#app'; // para acceder a la instancia inyectada
 import { useNotification } from '@/composables/useNotification';
 
 export function useRoleForm() {
   const router = useRouter();
+  const { $axios } = useNuxtApp(); // Obtenemos la instancia de axios inyectada por el plugin
   const role = ref<{ id?: number; name: string }>({ name: '' });
   const isEditing = ref(false);
   const isLoading = ref(false);
@@ -19,11 +20,11 @@ export function useRoleForm() {
     try {
       if (isEditing.value && role.value.id) {
         // Actualizar rol
-        await axios.put(`/roles/${role.value.id}`, role.value);
+        await $axios.put(`/roles/${role.value.id}`, role.value);
         showSuccessNotification('Éxito', 'Rol actualizado correctamente');
       } else {
         // Crear nuevo rol
-        await axios.post('/roles', role.value);
+        await $axios.post('/roles', role.value);
         showSuccessNotification('Éxito', 'Rol creado correctamente');
       }
       // Redirigir a la vista anterior
@@ -38,7 +39,7 @@ export function useRoleForm() {
   async function loadRole(roleId: number) {
     isLoading.value = true;
     try {
-      const { data } = await axios.get(`/roles/${roleId}`);
+      const { data } = await $axios.get(`/roles/${roleId}`);
       role.value = data;
     } catch {
       showErrorNotification('Error', 'Error al cargar el rol');
