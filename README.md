@@ -1,5 +1,5 @@
-# Nuxt Minimal Starter
-
+# Nuxt Minimal Starter 
+s
 Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
 
 ## Setup
