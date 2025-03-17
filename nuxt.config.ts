@@ -8,11 +8,9 @@ export default defineNuxtConfig({
   ],
   runtimeConfig: {
     public: {
-      public: {
         API_URL: process.env.API_URL,
         SOCKET_SERVER: process.env.NUXT_PUBLIC_SOCKET_SERVER,
         SOCKET_SERVER_PORT: process.env.NUXT_PUBLIC_SOCKET_SERVER_PORT
-      }
     }
   },
   css: [
