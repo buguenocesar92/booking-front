@@ -10,7 +10,7 @@ export default defineNuxtPlugin((nuxtApp) => {
 
   const axiosInstance: AxiosInstance = axios.create({
     baseURL,
-    timeout: 5000,
+    timeout: 60000,
     withCredentials: true,
   });
 
