@@ -31,14 +31,17 @@
           </div>
           <div class="md:w-1/4">
             <select
-              v-model="specialtyQuery"
-              class="w-full py-2 px-4 rounded-lg border border-gray-300 dark:border-gray-700 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
-              <option value="">Todas las especialidades</option>
-              <option value="Cardiología">Cardiología</option>
-              <option value="Dermatología">Dermatología</option>
-              <option value="Psicología">Psicología</option>
-              <option value="Nutrición">Nutrición</option>
-            </select>
+            v-model="specialtyQuery"
+            class="w-full py-2 px-4 rounded-lg border border-gray-300 dark:border-gray-700 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+            <option value="">Todas las especialidades</option>
+            <option
+              v-for="specialty in specialties"
+              :key="specialty.id"
+              :value="specialty.name">
+              {{ specialty.name }}
+            </option>
+          </select>
+
           </div>
           <button
             @click="handleSearch"
@@ -201,7 +204,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useNuxtApp } from '#app';
 import Navbar from "@/components/Navbars/AuthNavbar.vue";
 import FooterComponent from "@/components/Footers/Footer.vue";
@@ -210,21 +213,28 @@ import { NuxtLink } from '#components';
 interface Professional {
   id: number;
   name: string;
-  specialty: string;
   image: string;
+  specialty: {
+    id: number;
+    name: string;
+  };
 }
 
-// Variables reactivas para búsqueda y paginado
+interface Specialty {
+  id: number;
+  name: string;
+}
+
 const searchQuery = ref('');
 const specialtyQuery = ref('');
 const currentPage = ref(1);
-const professionals = ref<any>(null);
+const professionals = ref<any>({ data: [] });
+const specialties = ref<Specialty[]>([]);
 const pending = ref(false);
 const error = ref<any>(null);
 
 const { $axios } = useNuxtApp();
 
-// Función para obtener profesionales aplicando filtros y paginado
 async function fetchProfessionals() {
   pending.value = true;
   error.value = null;
@@ -246,24 +256,29 @@ async function fetchProfessionals() {
   }
 }
 
-// Función para manejar la búsqueda (reinicia la página a 1)
 function handleSearch() {
   currentPage.value = 1;
   fetchProfessionals();
 }
 
-// Función para cambiar de página
 function changePage(page: number) {
   currentPage.value = page;
   fetchProfessionals();
 }
 
-// Helper function para generar rating aleatorio (demo)
+async function fetchSpecialties() {
+  try {
+    const { data } = await $axios.get('/specialties');
+    specialties.value = data;
+  } catch (err) {
+    console.error('Error fetching specialties:', err);
+  }
+}
+
 function getRandomRating() {
   return (4 + Math.random()).toFixed(1);
 }
 
-// Helper function para obtener una descripción aleatoria basada en la especialidad
 function getRandomDescription(specialty: string) {
   const descriptions: Record<string, string> = {
     'Cardiología': 'Especialista en salud cardiovascular con amplia experiencia en diagnóstico y tratamiento.',
@@ -276,6 +291,8 @@ function getRandomDescription(specialty: string) {
   return descriptions[specialty] || descriptions['default'];
 }
 
-// Llamada inicial a la función para obtener los profesionales
-fetchProfessionals();
+onMounted(() => {
+  fetchProfessionals();
+  fetchSpecialties();
+});
 </script>
