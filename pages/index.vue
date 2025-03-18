@@ -107,7 +107,7 @@
               <div class="flex items-center mb-3">
                 <span
                   class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200">
-                  {{ pro.specialty }}
+                  {{ pro.specialty.name }}
                 </span>
               </div>
 
@@ -115,7 +115,7 @@
                 {{ getRandomDescription(pro.specialty) }}
               </p>
 
-              <div class="flex items-center justify-between mt-4">
+<!--               <div class="flex items-center justify-between mt-4">
                 <div class="flex space-x-2">
                   <button
                     class="p-2 rounded-full bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-600 dark:text-gray-300 transition-colors">
@@ -137,7 +137,20 @@
                     </svg>
                   </NuxtLink>
                 </div>
+              </div> -->
+              <div class="flex items-center justify-center mt-4">
+                <NuxtLink
+                  :to="`/professionales/${pro.id}`"
+                  class="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg transition-colors">
+                  Reservar
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none"
+                    viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M9 5l7 7-7 7" />
+                  </svg>
+                </NuxtLink>
               </div>
+
             </div>
           </div>
         </div>
